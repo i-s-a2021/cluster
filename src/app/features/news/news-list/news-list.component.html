@@ -1,0 +1,79 @@
+<div class="news-page fade-in">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="mb-2">
+          <i class="fas fa-newspaper me-3"></i>
+          {{ showArchived ? ('NEWS.ARCHIVED' | translate) : ('NEWS.TITLE' | translate) }}
+        </h1>
+        <p class="mb-0">{{ 'NEWS.SEARCH_NEWS' | translate }}</p>
+      </div>
+      <button class="btn btn-primary" routerLink="/news/create" *ngIf="auth.isLoggedIn() && auth.hasAnyRole(['admin','editor'])">
+        <i class="fas fa-plus me-2"></i>
+        {{ 'NEWS.ADD_NEWS' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Reusable Search & Filters Component -->
+  <app-search-filters
+    [config]="searchFiltersConfig"
+    [formData]="filterData"
+    [loading]="(isLoading$ | async) || false"
+    (filtersChanged)="onFiltersChanged($event)"
+    (actionClicked)="onActionClicked($event)">
+  </app-search-filters>
+
+  <!-- News List -->
+  <div *ngIf="isLoading$ | async" class="loading-section">
+    <app-loading [height]="300" [message]="'NEWS.LOADING_NEWS' | translate"></app-loading>
+  </div>
+
+  <div *ngIf="!(isLoading$ | async)">
+    <!-- Empty State -->
+    <div class="col-12" *ngIf="(filteredNews$ | async)?.length === 0">
+      <div class="empty-state-card">
+        <div class="empty-state-content">
+          <i class="fas fa-inbox fa-4x mb-4"></i>
+          <h3>{{ 'NEWS.NO_NEWS_FOUND' | translate }}</h3>
+          <p class="text-muted">
+            {{ showArchived ? ('NEWS.ARCHIVED' | translate) : ('NEWS.SEARCH_NEWS' | translate) }}
+          </p>
+          <button class="btn btn-primary" routerLink="/news/create" *ngIf="auth.isLoggedIn() && auth.hasAnyRole(['admin','editor'])">
+            <i class="fas fa-plus me-2"></i>
+            {{ 'NEWS.ADD_NEWS' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- News Cards -->
+    <div class="news-grid" *ngIf="(filteredNews$ | async) && (filteredNews$ | async)!.length > 0">
+      <app-news-card 
+        *ngFor="let news of filteredNews$ | async"
+        [news]="news"
+        [actions]="getNewsCardActions(news)"
+        [config]="newsCardConfig"
+        (actionClicked)="onNewsCardActionClicked($event)"
+        (archiveToggled)="onNewsCardArchiveToggled($event)"
+        (editClicked)="onNewsCardEditClicked($event)"
+        (viewClicked)="onNewsCardViewClicked($event)">
+      </app-news-card>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" 
+       [ngClass]="'toast-notification toast-' + toastType"
+       class="toast-notification fade-in">
+    <div class="toast-content">
+      <i class="fas" [ngClass]="{
+        'fa-check-circle': toastType === 'success',
+        'fa-exclamation-circle': toastType === 'error',
+        'fa-info-circle': toastType === 'info'
+      }"></i>
+      <span>{{ toastMessage }}</span>
+    </div>
+  </div>
+</div> 

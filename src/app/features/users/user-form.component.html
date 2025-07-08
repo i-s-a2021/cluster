@@ -1,0 +1,129 @@
+<div class="user-form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h4>
+        <i class="fas fa-user me-2"></i>
+        {{ mode === 'edit' ? ('USERS.EDIT_USER' | translate) : ('USERS.ADD_USER' | translate) }}
+      </h4>
+      <p class="mb-0">{{ mode === 'edit' ? ('USERS.EDIT_USER' | translate) : ('USERS.ADD_USER' | translate) }}</p>
+    </div>
+    
+    <div class="form-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-user me-1"></i>{{ 'USERS.FIRST_NAME' | translate }}
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                formControlName="name" 
+                [placeholder]="'USERS.FIRST_NAME' | translate"
+                required>
+              <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-envelope me-1"></i>{{ 'USERS.EMAIL' | translate }}
+              </label>
+              <input 
+                type="email" 
+                class="form-control" 
+                formControlName="email" 
+                [placeholder]="'USERS.EMAIL' | translate"
+                required>
+              <div *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+              <div *ngIf="userForm.get('email')?.errors?.['email'] && userForm.get('email')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+              <div *ngIf="userForm.get('email')?.errors?.['uniqueEmail'] && userForm.get('email')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6" *ngIf="mode === 'add'">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-lock me-1"></i>{{ 'USERS.PASSWORD' | translate }}
+              </label>
+              <input 
+                type="password" 
+                class="form-control" 
+                formControlName="password" 
+                [placeholder]="'USERS.PASSWORD' | translate"
+                required 
+                minlength="8">
+              <div *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+              <div *ngIf="userForm.get('password')?.errors?.['minlength'] && userForm.get('password')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+              <div *ngIf="userForm.get('password')?.errors?.['strongPassword'] && userForm.get('password')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-user-tag me-1"></i>{{ 'USERS.ROLE' | translate }}
+              </label>
+              <select class="form-select" formControlName="roles" multiple required>
+                <option *ngFor="let role of availableRoles$ | async" [value]="role">
+                  {{ 'USERS.' + (role | uppercase) | translate }}
+                </option>
+              </select>
+              <div *ngIf="userForm.get('roles')?.invalid && userForm.get('roles')?.touched" class="error-message">
+                <i class="fas fa-exclamation-circle me-1"></i>{{ 'COMMON.VALIDATION_ERROR' | translate }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-image me-1"></i>{{ 'USERS.PROFILE_IMAGE' | translate }}
+              </label>
+              <input 
+                type="file" 
+                class="form-control" 
+                (change)="onFileChange($event)"
+                accept="image/*">
+              <div *ngIf="imagePreview" class="image-preview">
+                <img [src]="imagePreview" alt="Preview" class="preview-img">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button 
+            class="btn btn-primary" 
+            type="submit" 
+            [disabled]="userForm.invalid || loading">
+            <i class="fas fa-save me-2"></i> 
+            {{ mode === 'edit' ? ('COMMON.SAVE' | translate) : ('USERS.ADD_USER' | translate) }}
+          </button>
+          <button 
+            class="btn btn-secondary" 
+            type="button" 
+            (click)="cancel.emit()">
+            <i class="fas fa-times me-2"></i>{{ 'COMMON.CANCEL' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

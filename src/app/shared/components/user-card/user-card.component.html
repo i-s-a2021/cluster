@@ -1,0 +1,75 @@
+<div class="user-card" [ngClass]="config.customClass">
+  <div class="user-card-header" *ngIf="config.showAvatar || config.showStatus">
+    <div class="user-avatar" *ngIf="config.showAvatar">
+      <img 
+        [src]="user.image || 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2'" 
+        [alt]="user.name"
+        class="avatar-img">
+    </div>
+    <div class="user-status" *ngIf="config.showStatus">
+      <span class="status-badge" [class.active]="user.isActive" [class.inactive]="!user.isActive">
+        <i class="fas" [ngClass]="user.isActive ? 'fa-check-circle' : 'fa-times-circle'"></i>
+        {{ user.isActive ? ('USERS.ACTIVE' | translate) : ('USERS.INACTIVE' | translate) }}
+      </span>
+    </div>
+  </div>
+  
+  <div class="user-card-body">
+    <h5 class="user-name">{{ user.name }}</h5>
+    <p class="user-email">{{ user.email }}</p>
+    
+    <div class="user-role" *ngIf="config.showRole">
+      <span class="role-badge" [ngClass]="getRoleClass(user.roles[0])">
+        <i class="fas fa-user-tag me-1"></i>
+        {{ 'USERS.' + (user.roles[0] | uppercase) | translate }}
+      </span>
+    </div>
+    
+    <div class="user-meta" *ngIf="config.showMeta">
+      <div class="meta-item">
+        <i class="fas fa-calendar"></i>
+        <span>{{ 'USERS.JOIN_DATE' | translate }} {{ user.createdAt | date:'mediumDate' }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="user-card-footer" *ngIf="config.showActions && actions.length">
+    <div class="user-actions">
+      <ng-container *ngFor="let action of actions">
+        <button 
+          *ngIf="!action.routerLink"
+          class="btn btn-sm"
+          [ngClass]="{
+            'btn-outline-primary': action.type === 'primary',
+            'btn-outline-secondary': action.type === 'secondary',
+            'btn-outline-success': action.type === 'success',
+            'btn-outline-warning': action.type === 'warning',
+            'btn-outline-danger': action.type === 'danger',
+            'btn-custom': action.type === 'custom'
+          }"
+          [title]="action.tooltip"
+          [disabled]="action.disabled"
+          (click)="onActionClick(action, $event)">
+          <i class="fas" [ngClass]="action.icon"></i>
+        </button>
+        <a 
+          *ngIf="action.routerLink"
+          class="btn btn-sm"
+          [ngClass]="{
+            'btn-outline-primary': action.type === 'primary',
+            'btn-outline-secondary': action.type === 'secondary',
+            'btn-outline-success': action.type === 'success',
+            'btn-outline-warning': action.type === 'warning',
+            'btn-outline-danger': action.type === 'danger',
+            'btn-custom': action.type === 'custom'
+          }"
+          [title]="action.tooltip"
+          [routerLink]="action.routerLink"
+          [class.disabled]="action.disabled"
+          (click)="action.disabled ? $event.preventDefault() : null">
+          <i class="fas" [ngClass]="action.icon"></i>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</div> 

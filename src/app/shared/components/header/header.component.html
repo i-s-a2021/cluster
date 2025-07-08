@@ -1,0 +1,121 @@
+<header class="header" [class.dark-mode]="themeService.isDarkMode() | async">
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- Brand - Left Side -->
+      <a class="navbar-brand" [routerLink]="config.brand.route">
+        <div class="brand-logo">
+          <i [class]="config.brand.logo"></i>
+        </div>
+        <span class="brand-text">{{ 'APP.TITLE' | translate }}</span>
+      </a>
+      
+      <!-- Desktop Navigation - Center -->
+      <div class="nav-menu desktop-menu">
+        <a 
+          *ngFor="let item of config.navItems"
+          class="nav-link" 
+          [routerLink]="item.route" 
+          routerLinkActive="active"
+          [class.active]="item.active"
+          [style.display]="hasPermission(item) ? 'flex' : 'none'">
+          <i [class]="item.icon"></i>
+          <span>{{ 'APP.' + (item.text | uppercase) | translate }}</span>
+        </a>
+      </div>
+      
+      <!-- User Actions - Right Side -->
+      <div class="nav-actions">
+        <!-- User Section -->
+        <div class="user-section" *ngIf="auth.isLoggedIn()">
+          <span class="welcome-text">
+            <i class="fas fa-user-circle"></i>
+            {{ auth.getCurrentUser()?.username }}
+          </span>
+          
+          <!-- User Actions -->
+          <ng-container *ngFor="let userAction of config.userActions">
+            <button 
+              *ngIf="userAction.action === 'logout' && hasPermission(userAction)"
+              class="btn-logout" 
+              (click)="handleUserAction(userAction)">
+              <i [class]="userAction.icon"></i>
+              <span>{{ 'APP.LOGOUT' | translate }}</span>
+            </button>
+            
+            <a 
+              *ngIf="userAction.action === 'login' && !auth.isLoggedIn() && hasPermission(userAction)"
+              class="btn-login" 
+              [routerLink]="userAction.route">
+              <i [class]="userAction.icon"></i>
+              <span>{{ 'APP.LOGIN' | translate }}</span>
+            </a>
+            
+            <button 
+              *ngIf="userAction.action === 'custom' && hasPermission(userAction)"
+              class="btn-custom" 
+              (click)="handleUserAction(userAction)">
+              <i [class]="userAction.icon"></i>
+              <span>{{ userAction.text }}</span>
+            </button>
+          </ng-container>
+        </div>
+        
+        <!-- Login Button for non-logged in users -->
+        <ng-container *ngIf="!auth.isLoggedIn()">
+          <ng-container *ngFor="let userAction of config.userActions">
+            <a 
+              *ngIf="userAction.action === 'login' && hasPermission(userAction)"
+              class="btn-login" 
+              [routerLink]="userAction.route">
+              <i [class]="userAction.icon"></i>
+              <span>{{ userAction.text }}</span>
+            </a>
+          </ng-container>
+        </ng-container>
+        
+        <!-- Theme Toggle - Rightmost -->
+        <button 
+          *ngIf="config.showThemeToggle"
+          class="btn-theme" 
+          (click)="toggleTheme()" 
+          [title]="(isDarkMode$ | async) ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+          <i class="fas" [ngClass]="(isDarkMode$ | async) ? 'fa-sun' : 'fa-moon'"></i>
+        </button>
+        <!-- Language Switch -->
+        <button 
+          class="btn-lang" 
+          (click)="switchLang(currentLang === 'en' ? 'ar' : 'en')" 
+          [title]="currentLang === 'en' ? ('HEADER.SWITCH_TO_ARABIC' | translate) : ('HEADER.SWITCH_TO_ENGLISH' | translate)">
+          <i class="fas fa-globe"></i>
+          <span>{{ currentLang === 'en' ? 'AR' : 'EN' }}</span>
+        </button>
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button 
+        *ngIf="config.showMobileMenu"
+        class="mobile-toggle" 
+        (click)="toggleNavbar()">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div 
+      *ngIf="config.showMobileMenu"
+      class="mobile-menu" 
+      [class.show]="!isCollapsed">
+      <a 
+        *ngFor="let item of config.navItems"
+        class="nav-link" 
+        [routerLink]="item.route" 
+        routerLinkActive="active"
+        [class.active]="item.active"
+        [style.display]="hasPermission(item) ? 'flex' : 'none'"
+        (click)="isCollapsed = true">
+        <i [class]="item.icon"></i>
+        <span>{{ item.text }}</span>
+      </a>
+    </div>
+  </nav>
+</header> 

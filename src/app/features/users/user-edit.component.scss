@@ -1,0 +1,23 @@
+.toast-message {
+  background: var(--color-accent);
+  color: var(--color-text-light);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--color-shadow);
+  font-weight: 500;
+  position: relative;
+  z-index: 10;
+  min-width: 200px;
+  text-align: center;
+  animation: fadeIn 0.4s;
+}
+.toast-message.error {
+  background: #dc2626;
+}
+.fade-in {
+  animation: fadeIn 0.4s;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+} 

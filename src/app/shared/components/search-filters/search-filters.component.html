@@ -1,0 +1,108 @@
+<div class="filter-section">
+  <div class="filter-card">
+    <div class="filter-header">
+      <h4>
+        <i *ngIf="config.titleIcon" [class]="'fas ' + config.titleIcon + ' me-2'"></i>
+        {{ 'COMMON.SEARCH' | translate }} & {{ 'COMMON.FILTER' | translate }}
+      </h4>
+    </div>
+    <div class="filter-body">
+      <form [formGroup]="filterForm" class="row g-3">
+        <!-- Dynamic Fields -->
+        <div 
+          *ngFor="let field of config.fields" 
+          [ngClass]="getFieldColClass(field)"
+          class="filter-field">
+          
+          <!-- Text/Number Input -->
+          <label *ngIf="field.type === 'text' || field.type === 'number'" [for]="field.name" class="form-label">
+            <i *ngIf="field.icon" [class]="'fas ' + field.icon + ' me-1'"></i>
+            {{ field.label }}
+          </label>
+          <input 
+            *ngIf="field.type === 'text' || field.type === 'number'"
+            [type]="getFieldType(field)"
+            [class]="getFieldClass(field)"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+            [required]="field.required || false">
+
+          <!-- Date Input -->
+          <label *ngIf="field.type === 'date'" [for]="field.name" class="form-label">
+            <i *ngIf="field.icon" [class]="'fas ' + field.icon + ' me-1'"></i>
+            {{ field.label }}
+          </label>
+          <input 
+            *ngIf="field.type === 'date'"
+            type="date"
+            [class]="getFieldClass(field)"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [required]="field.required || false">
+
+          <!-- Select Dropdown -->
+          <label *ngIf="field.type === 'select'" [for]="field.name" class="form-label">
+            <i *ngIf="field.icon" [class]="'fas ' + field.icon + ' me-1'"></i>
+            {{ field.label }}
+          </label>
+          <select 
+            *ngIf="field.type === 'select'"
+            [class]="getFieldClass(field)"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [required]="field.required || false">
+            <option value="">{{ 'COMMON.SELECT' | translate }}...</option>
+            <option 
+              *ngFor="let option of field.options" 
+              [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+
+          <!-- Multi-Select Dropdown -->
+          <label *ngIf="field.type === 'multiselect'" [for]="field.name" class="form-label">
+            <i *ngIf="field.icon" [class]="'fas ' + field.icon + ' me-1'"></i>
+            {{ field.label }}
+          </label>
+          <select 
+            *ngIf="field.type === 'multiselect'"
+            [class]="getFieldClass(field)"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [multiple]="field.multiple"
+            [required]="field.required || false">
+            <option 
+              *ngFor="let option of field.options" 
+              [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div *ngIf="config.showActions && config.actions && config.actions.length > 0" 
+             class="col-12 d-flex align-items-end gap-2">
+          <button 
+            *ngFor="let action of config.actions"
+            type="button" 
+            [class]="'btn btn-' + action.type"
+            [disabled]="action.disabled || loading"
+            (click)="onActionClick(action)">
+            <i [class]="'fas ' + action.icon + ' me-1'"></i>
+            {{ action.label }}
+          </button>
+        </div>
+
+        <!-- Default Reset Button -->
+        <div *ngIf="config.showReset && (!config.actions || config.actions.length === 0)" 
+             class="col-12 d-flex align-items-end gap-2">
+          <button type="button" class="btn btn-secondary" (click)="resetFilters()" [disabled]="loading">
+            <i class="fas fa-undo me-1"></i>
+            {{ 'COMMON.RESET' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

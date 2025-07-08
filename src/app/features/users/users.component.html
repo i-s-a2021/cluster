@@ -1,0 +1,69 @@
+<div class="users-page fade-in">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="mb-2">
+          <i class="fas fa-users me-3"></i>
+          {{ 'USERS.TITLE' | translate }}
+        </h1>
+        <p class="mb-0">{{ 'USERS.SEARCH_USERS' | translate }}</p>
+      </div>
+      <button class="btn btn-primary" routerLink="add">
+        <i class="fas fa-user-plus me-2"></i> {{ 'USERS.ADD_USER' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+
+  <!-- Reusable Search & Filters Component -->
+  <app-search-filters
+    [config]="searchFiltersConfig"
+    [formData]="filterData"
+    [loading]="(isLoading$ | async) || false"
+    (filtersChanged)="onFiltersChanged($event)"
+    (actionClicked)="onActionClicked($event)">
+  </app-search-filters>
+
+  <!-- Users List -->
+  <div *ngIf="isLoading$ | async" class="loading-section">
+    <app-loading [height]="300" [message]="'USERS.LOADING_USERS' | translate"></app-loading>
+  </div>
+
+  <div *ngIf="!(isLoading$ | async)">
+    <!-- Empty State -->
+    <div class="col-12" *ngIf="(filteredUsers$ | async)?.length === 0">
+      <div class="empty-state-card">
+        <div class="empty-state-content">
+          <i class="fas fa-users fa-4x mb-4"></i>
+          <h3>{{ 'USERS.NO_USERS_FOUND' | translate }}</h3>
+          <p class="text-muted">{{ 'USERS.SEARCH_USERS' | translate }}</p>
+          <button class="btn btn-primary" routerLink="add">
+            <i class="fas fa-user-plus me-2"></i>
+            {{ 'USERS.ADD_USER' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Grid -->
+    <div class="users-grid" *ngIf="(filteredUsers$ | async) && (filteredUsers$ | async)!.length > 0">
+      <app-user-card 
+        *ngFor="let user of filteredUsers$ | async"
+        [user]="user"
+        [actions]="getUserCardActions(user)"
+        [config]="userCardConfig">
+      </app-user-card>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div *ngIf="toastMessage" [ngClass]="'toast-message fade-in toast-' + toastType">
+    <span class="toast-icon" *ngIf="toastType === 'success'">✔️</span>
+    <span class="toast-icon" *ngIf="toastType === 'error'">❌</span>
+    <span class="toast-icon" *ngIf="toastType === 'undo'">↩️</span>
+    {{ toastMessage }}
+    <button *ngIf="toastType === 'success' && lastDeletedUser" class="btn btn-link btn-sm toast-undo-btn" (click)="undoDeleteUser()">{{ 'COMMON.UNDO' | translate }}</button>
+  </div>
+</div> 

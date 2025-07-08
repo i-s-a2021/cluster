@@ -1,0 +1,14 @@
+<div class="card mb-4">
+  <div class="card-header">
+    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i> {{ 'USERS.ADD_USER' | translate }}</h5>
+  </div>
+  <div class="card-body">
+    <app-user-form
+      [mode]="'add'"
+      [availableRoles$]="availableRoles$"
+      (submitUser)="onSubmit($event)"
+      (cancel)="onCancel()"
+    ></app-user-form>
+    <div *ngIf="toastMessage" class="toast-message fade-in mt-3">{{ toastMessage }}</div>
+  </div>
+</div> 

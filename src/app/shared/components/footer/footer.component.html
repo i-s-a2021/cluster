@@ -1,0 +1,67 @@
+<footer class="footer" [class.dark-mode]="themeService.isDarkMode() | async">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <i [class]="config.brand.logo"></i>
+      </div>
+      <div class="brand-info">
+        <h3>{{ 'APP.TITLE' | translate }}</h3>
+        <p>{{ 'FOOTER.DESCRIPTION' | translate }}</p>
+      </div>
+    </div>
+    
+    <div class="footer-links">
+      <div class="footer-section" *ngFor="let section of config.sections">
+        <h4>{{ section.title === 'Quick Links' ? ('FOOTER.QUICK_LINKS' | translate) : ('FOOTER.SUPPORT' | translate) }}</h4>
+        <ul>
+          <li *ngFor="let link of section.links">
+            <a 
+              *ngIf="link.route" 
+              [routerLink]="link.route">
+              <i [class]="link.icon + ' me-2'"></i>{{ 'APP.' + (link.text | uppercase) | translate }}
+            </a>
+            <a 
+              *ngIf="link.url" 
+              [href]="link.url"
+              [target]="link.external ? '_blank' : '_self'"
+              [rel]="link.external ? 'noopener noreferrer' : ''">
+              <i [class]="link.icon + ' me-2'"></i>{{ link.text === 'Help Center' ? ('FOOTER.HELP_CENTER' | translate) : 
+                                                      link.text === 'Contact Us' ? ('FOOTER.CONTACT_US' | translate) : 
+                                                      ('FOOTER.DOCUMENTATION' | translate) }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="footer-section" *ngIf="config.socialLinks.length > 0">
+        <h4>{{ 'APP.CONTACT' | translate }}</h4>
+        <div class="social-links">
+          <a 
+            *ngFor="let social of config.socialLinks"
+            [href]="social.url" 
+            class="social-link"
+            [title]="social.label"
+            target="_blank"
+            rel="noopener noreferrer">
+            <i [class]="social.icon"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <div class="footer-bottom-content">
+      <p>{{ 'FOOTER.COPYRIGHT' | translate }}</p>
+      <div class="footer-bottom-links">
+        <a 
+          *ngFor="let link of config.bottomLinks"
+          [href]="link.url">
+          {{ link.text === 'Privacy Policy' ? ('FOOTER.PRIVACY_POLICY' | translate) : 
+             link.text === 'Terms of Service' ? ('FOOTER.TERMS_OF_SERVICE' | translate) : 
+             ('FOOTER.COOKIE_POLICY' | translate) }}
+        </a>
+      </div>
+    </div>
+  </div>
+</footer> 

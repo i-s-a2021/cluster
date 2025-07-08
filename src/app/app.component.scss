@@ -1,0 +1,108 @@
+/* Styles for AppComponent (add as needed) */ 
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-bg) 0%, #e2e8f0 100%);
+  
+  &.dark-mode {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  }
+}
+
+app-sidebar {
+  flex-shrink: 0;
+}
+
+main.flex-grow-1 {
+  flex-grow: 1;
+  min-width: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Main Content Area */
+main {
+  background: transparent;
+  min-height: calc(100vh - 60px); /* Adjust based on header height */
+  padding: 0;
+  
+  .container-fluid {
+    padding: 2rem;
+  }
+}
+
+/* Page Headers */
+.page-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: var(--color-text-light);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--color-shadow);
+  
+  h1, h2, h3 {
+    color: var(--color-text-light);
+    margin: 0;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0 0 0;
+  }
+}
+
+/* Section Headers */
+.section-header {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+  color: var(--color-text-light);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--color-shadow);
+  
+  h3, h4, h5 {
+    color: var(--color-text-light);
+    margin: 0;
+  }
+}
+
+/* Content Cards */
+.content-card {
+  background: var(--color-surface);
+  border-radius: 1rem;
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  .card-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: var(--color-text-light);
+    border-radius: 1rem 1rem 0 0;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--color-glass-border);
+    
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--color-text-light);
+      margin: 0;
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  main .container-fluid { padding: 1rem; }
+  .page-header { padding: 1.5rem; }
+  .content-card .card-header, .content-card .card-body { padding: 1rem; }
+} 

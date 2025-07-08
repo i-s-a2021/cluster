@@ -1,0 +1,198 @@
+<div class="container-fluid px-4 py-4 fade-in">
+  <div *ngIf="isLoading$ | async">
+    <app-loading [height]="400" message="Loading..."></app-loading>
+  </div>
+
+  <div *ngIf="!(isLoading$ | async)">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a routerLink="/">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a routerLink="/news">News</a>
+        </li>
+        <li class="breadcrumb-item active">
+          {{ isEditMode ? 'Edit News' : 'Add News' }}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Form Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="h3 mb-0">
+          <i class="fas" [class.fa-edit]="isEditMode" [class.fa-plus]="!isEditMode" [class.me-2]="true"></i>
+          {{ isEditMode ? 'Edit News Article' : 'Add New Article' }}
+        </h1>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="newsForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Article Details</h5>
+            </div>
+            <div class="card-body">
+              <!-- Title -->
+              <div class="mb-3">
+                <label for="title" class="form-label">Title *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="title"
+                  formControlName="title"
+                  [class.is-invalid]="newsForm.get('title')?.invalid && newsForm.get('title')?.touched"
+                  placeholder="Enter article title">
+                <div class="invalid-feedback" *ngIf="newsForm.get('title')?.invalid && newsForm.get('title')?.touched">
+                  Title is required
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <div class="mb-3">
+                <label for="summary" class="form-label">Summary *</label>
+                <textarea 
+                  class="form-control" 
+                  id="summary"
+                  formControlName="summary"
+                  rows="3"
+                  [class.is-invalid]="newsForm.get('summary')?.invalid && newsForm.get('summary')?.touched"
+                  placeholder="Enter article summary..."></textarea>
+                <div class="invalid-feedback" *ngIf="newsForm.get('summary')?.invalid && newsForm.get('summary')?.touched">
+                  Summary is required
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="mb-3">
+                <label for="content" class="form-label">Content *</label>
+                <textarea 
+                  class="form-control" 
+                  id="content"
+                  formControlName="content"
+                  rows="12"
+                  [class.is-invalid]="newsForm.get('content')?.invalid && newsForm.get('content')?.touched"
+                  placeholder="Enter article content..."></textarea>
+                <div class="invalid-feedback" *ngIf="newsForm.get('content')?.invalid && newsForm.get('content')?.touched">
+                  Content is required
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Publication Settings</h5>
+            </div>
+            <div class="card-body">
+              <!-- Author -->
+              <div class="mb-3">
+                <label for="author" class="form-label">Author *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="author"
+                  formControlName="author"
+                  [class.is-invalid]="newsForm.get('author')?.invalid && newsForm.get('author')?.touched"
+                  placeholder="Enter author name">
+                <div class="invalid-feedback" *ngIf="newsForm.get('author')?.invalid && newsForm.get('author')?.touched">
+                  Author is required
+                </div>
+              </div>
+
+              <!-- Publish Date -->
+              <div class="mb-3">
+                <label for="publishDate" class="form-label">Publish Date *</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="publishDate"
+                  formControlName="publishDate"
+                  [class.is-invalid]="newsForm.get('publishDate')?.invalid && newsForm.get('publishDate')?.touched">
+                <div class="invalid-feedback" *ngIf="newsForm.get('publishDate')?.invalid && newsForm.get('publishDate')?.touched">
+                  Publish date is required
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div class="mb-3">
+                <label for="tags" class="form-label">Tags</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="tags"
+                  formControlName="tagsInput"
+                  placeholder="Enter tags separated by commas">
+                <small class="form-text text-muted">
+                  Separate tags with commas (e.g., technology, news, update)
+                </small>
+              </div>
+
+              <!-- Available Tags -->
+              <div class="mb-3" *ngIf="(availableTags$ | async)?.length">
+                <label class="form-label">Available Tags</label>
+                <div class="d-flex flex-wrap gap-1">
+                  <button 
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    *ngFor="let tag of availableTags$ | async"
+                    (click)="addTag(tag)">
+                    {{ tag }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Archive Status -->
+              <div class="mb-3" *ngIf="isEditMode">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="isArchived"
+                    formControlName="isArchived">
+                  <label class="form-check-label" for="isArchived">
+                    Archive this article
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <div class="d-grid gap-2">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary"
+                  [disabled]="newsForm.invalid || isSubmitting">
+                  <i class="fas fa-save me-2"></i>
+                  <span *ngIf="isSubmitting">
+                    {{ isEditMode ? 'Updating...' : 'Creating...' }}
+                  </span>
+                  <span *ngIf="!isSubmitting">
+                    {{ isEditMode ? 'Update Article' : 'Create Article' }}
+                  </span>
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary"
+                  routerLink="/news">
+                  <i class="fas fa-arrow-left me-2"></i>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> 

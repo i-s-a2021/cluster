@@ -1,0 +1,54 @@
+<div class="news-card" [ngClass]="config.customClass">
+  <div class="news-card-header">
+    <div class="news-status" *ngIf="config.showStatus">
+      <span [ngClass]="getStatusBadgeClass()">
+        <i [class]="'fas ' + getStatusIcon() + ' me-1'"></i>{{ getStatusText() | translate }}
+      </span>
+    </div>
+    <div class="news-actions" *ngIf="config.showActions && actions.length > 0">
+      <button 
+        *ngFor="let action of actions"
+        [ngClass]="'btn btn-sm btn-' + action.type"
+        [routerLink]="action.routerLink"
+        [disabled]="action.disabled"
+        [title]="action.tooltip"
+        (click)="onActionClick(action)"
+        [style.display]="action.showCondition === false ? 'none' : 'inline-block'">
+        <i [class]="'fas ' + action.icon"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="news-card-body">
+    <h5 class="news-title">
+      <a [routerLink]="['/news', news.id]" (click)="onViewClick()">
+        {{ news.title }}
+      </a>
+    </h5>
+    <p class="news-summary">{{ news.summary }}</p>
+    
+    <div class="news-tags" *ngIf="config.showTags && getVisibleTags().length > 0">
+      <span *ngFor="let tag of getVisibleTags()" class="tag">
+        {{ tag }}
+      </span>
+    </div>
+    
+    <div class="news-meta" *ngIf="config.showMeta">
+      <div class="meta-item">
+        <i class="fas fa-user"></i>
+        <span>{{ 'NEWS.AUTHOR' | translate }}: {{ news.author }}</span>
+      </div>
+      <div class="meta-item">
+        <i class="fas fa-calendar"></i>
+        <span>{{ 'NEWS.PUBLISH_DATE' | translate }}: {{ news.publishDate | date:'mediumDate' }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="news-card-footer" *ngIf="config.showFooter">
+    <button class="btn btn-primary btn-sm" [routerLink]="['/news', news.id]" (click)="onViewClick()">
+      <i class="fas fa-eye me-1"></i>
+      {{ 'NEWS.VIEW_DETAILS' | translate }}
+    </button>
+  </div>
+</div> 

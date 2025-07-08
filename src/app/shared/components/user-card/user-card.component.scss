@@ -1,0 +1,118 @@
+// User card
+.user-card {
+  background: var(--color-surface);
+  border-radius: 1rem;
+  box-shadow: var(--color-shadow);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .user-card-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-glass-border);
+  }
+  
+  .user-avatar .avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+  }
+  
+  .user-status .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-light);
+    
+    &.active { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    &.inactive { background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); }
+  }
+  
+  .user-card-body { padding: 1.5rem; }
+  
+  .user-name {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .user-email {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .user-role {
+    margin-bottom: 1rem;
+    
+    .role-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      
+      &.admin { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: var(--color-text-light); }
+      &.editor { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: var(--color-text-light); }
+      &.author { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: var(--color-text-light); }
+    }
+  }
+  
+  .user-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    
+    i {
+      color: #9ca3af;
+      font-size: 0.75rem;
+    }
+  }
+  
+  .user-card-footer {
+    padding: 1rem 1.5rem;
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+  }
+  
+  .user-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    
+    .btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      
+      &:hover { transform: scale(1.05); }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .user-card {
+    .user-card-header, .user-card-body, .user-card-footer { padding: 1rem; }
+  }
+} 

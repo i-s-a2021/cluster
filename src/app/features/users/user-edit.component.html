@@ -1,0 +1,21 @@
+<div class="card mb-4" *ngIf="user$ | async as user; else loading">
+  <div class="card-header">
+    <h5 class="mb-0"><i class="fas fa-user-edit me-2"></i> Edit User</h5>
+  </div>
+  <div class="card-body">
+    <app-user-form
+      [user]="user"
+      [mode]="'edit'"
+      [availableRoles$]="availableRoles$"
+      (submitUser)="onSubmit($event, user)"
+      (cancel)="onCancel()"
+    ></app-user-form>
+    <div *ngIf="toastMessage" class="toast-message fade-in mt-3">{{ toastMessage }}</div>
+  </div>
+</div>
+<ng-template #loading>
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <div class="mt-2">Loading user...</div>
+  </div>
+</ng-template> 

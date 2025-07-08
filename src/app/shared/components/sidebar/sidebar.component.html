@@ -1,0 +1,115 @@
+<nav class="sidebar" [class.collapsed]="config.collapsed" [class.dark-mode]="themeService.isDarkMode() | async">
+  <button 
+    *ngIf="config.showToggle"
+    class="sidebar-toggle" 
+    (click)="toggleCollapse()">
+    <i class="fas" [ngClass]="config.collapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+  </button>
+  
+  <ul class="sidebar-menu">
+    <!-- Regular Items -->
+    <ng-container *ngFor="let item of config.items">
+      <ng-container *ngIf="hasPermission(item)">
+        <li [class.active]="isGroupActive(item)" *ngIf="!item.children">
+          <a [routerLink]="item.route">
+            <i *ngIf="item.icon" class="fas" [ngClass]="item.icon"></i>
+            <span *ngIf="!config.collapsed">{{ 'APP.' + (item.label | uppercase) | translate }}</span>
+            <span 
+              *ngIf="!config.collapsed && item.badge && config.showBadges" 
+              class="badge" 
+              [style.background-color]="item.badgeColor || '#3b82f6'">
+              {{ item.badge }}
+            </span>
+          </a>
+        </li>
+        <li class="sidebar-group" [class.active]="isGroupActive(item)" *ngIf="item.children">
+          <div class="sidebar-group-label" (click)="onGroupClick(item)">
+            <i *ngIf="item.icon" class="fas" [ngClass]="item.icon"></i>
+            <span *ngIf="!config.collapsed">{{ 'APP.' + (item.label | uppercase) | translate }}</span>
+            <span 
+              *ngIf="!config.collapsed && item.badge && config.showBadges" 
+              class="badge" 
+              [style.background-color]="item.badgeColor || '#3b82f6'">
+              {{ item.badge }}
+            </span>
+            <i *ngIf="!config.collapsed" class="fas ms-auto" [ngClass]="expandedGroups.has(item.label) ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+          </div>
+          <ul class="sidebar-submenu" *ngIf="expandedGroups.has(item.label) && !config.collapsed">
+            <ng-container *ngFor="let child of item.children">
+              <ng-container *ngIf="hasPermission(child)">
+                <li [class.active]="activeRoute === child.route">
+                  <a [routerLink]="child.route">
+                    <i *ngIf="child.icon" class="fas" [ngClass]="child.icon"></i>
+                    <span *ngIf="!config.collapsed">{{ child.label === 'View Users' ? ('SIDEBAR.VIEW_USERS' | translate) : ('SIDEBAR.ADD_USER' | translate) }}</span>
+                    <span 
+                      *ngIf="!config.collapsed && child.badge && config.showBadges" 
+                      class="badge" 
+                      [style.background-color]="child.badgeColor || '#3b82f6'">
+                      {{ child.badge }}
+                    </span>
+                  </a>
+                </li>
+              </ng-container>
+            </ng-container>
+          </ul>
+        </li>
+      </ng-container>
+    </ng-container>
+    
+    <!-- Grouped Items -->
+    <ng-container *ngFor="let group of config.groups">
+      <ng-container *ngIf="hasPermission(group)">
+        <li class="sidebar-group-header" *ngIf="group.title && !config.collapsed">
+          <span class="group-title">{{ group.title }}</span>
+        </li>
+        <ng-container *ngFor="let item of group.items">
+          <ng-container *ngIf="hasPermission(item)">
+            <li [class.active]="isGroupActive(item)" *ngIf="!item.children">
+              <a [routerLink]="item.route">
+                <i *ngIf="item.icon" class="fas" [ngClass]="item.icon"></i>
+                <span *ngIf="!config.collapsed">{{ 'APP.' + (item.label | uppercase) | translate }}</span>
+                <span 
+                  *ngIf="!config.collapsed && item.badge && config.showBadges" 
+                  class="badge" 
+                  [style.background-color]="item.badgeColor || '#3b82f6'">
+                  {{ item.badge }}
+                </span>
+              </a>
+            </li>
+            <li class="sidebar-group" [class.active]="isGroupActive(item)" *ngIf="item.children">
+              <div class="sidebar-group-label" (click)="onGroupClick(item)">
+                <i *ngIf="item.icon" class="fas" [ngClass]="item.icon"></i>
+                <span *ngIf="!config.collapsed">{{ 'APP.' + (item.label | uppercase) | translate }}</span>
+                <span 
+                  *ngIf="!config.collapsed && item.badge && config.showBadges" 
+                  class="badge" 
+                  [style.background-color]="item.badgeColor || '#3b82f6'">
+                  {{ item.badge }}
+                </span>
+                <i *ngIf="!config.collapsed" class="fas ms-auto" [ngClass]="expandedGroups.has(item.label) ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+              </div>
+              <ul class="sidebar-submenu" *ngIf="expandedGroups.has(item.label) && !config.collapsed">
+                <ng-container *ngFor="let child of item.children">
+                  <ng-container *ngIf="hasPermission(child)">
+                    <li [class.active]="activeRoute === child.route">
+                      <a [routerLink]="child.route">
+                        <i *ngIf="child.icon" class="fas" [ngClass]="child.icon"></i>
+                        <span *ngIf="!config.collapsed">{{ 'APP.' + (child.label | uppercase) | translate }}</span>
+                        <span 
+                          *ngIf="!config.collapsed && child.badge && config.showBadges" 
+                          class="badge" 
+                          [style.background-color]="child.badgeColor || '#3b82f6'">
+                          {{ child.badge }}
+                        </span>
+                      </a>
+                    </li>
+                  </ng-container>
+                </ng-container>
+              </ul>
+            </li>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ul>
+</nav> 
