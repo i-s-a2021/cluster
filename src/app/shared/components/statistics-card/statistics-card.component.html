@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center">
       <div class="flex-grow-1">
         <div class="stat-value">{{ data.value }}</div>
-        <div class="stat-label">{{ getTranslatedLabel() }}</div>
+        <div class="stat-label">{{ getTranslatedLabel() | translate}}</div>
       </div>
       <div class="ms-3" *ngIf="config.showIcon">
         <i [ngClass]="getIconClass()"></i>
